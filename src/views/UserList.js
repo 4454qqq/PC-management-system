@@ -45,6 +45,7 @@ const UserList = () => {
       title: "用户名",
       dataIndex: "username",
       key: "username",
+      align: "center", 
     },
     {
       title: "角色",
@@ -55,31 +56,49 @@ const UserList = () => {
           return (
             <Select
               defaultValue={text}
-              style={{ width: 120 }}
+              style={{ width: 120, borderRadius: 4, boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)" }}
               onChange={(value) => handleEditRole(record._id, value)}
-              variant="borderless"
               disabled={disabled}
+              
             >
-              <Option value="admin">管理员</Option>
+              {/* 通过改变handleEditRole中的value来向后端发起请求 */}
+              <Option value="admin">管理员</Option>  
               <Option value="audit">审核人员</Option>
             </Select>
           );
         } else {
-          return text;
+          return <span>{text}</span>; 
         }
       },
+      align: "center", 
     },
     {
-      title: "",
+      title: "操作",
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          {role === "superAdmin" && <a onClick={() => handleEdit()}>编辑</a>}
-          <a onClick={() => handleDelete(record)}>删除</a>
+          {role === "superAdmin" && (
+            <Button
+              type="link"
+              style={{ padding: 0, fontSize: 14 }}
+              onClick={() => handleEdit()}
+            >
+              编辑
+            </Button>
+          )}
+          <Button
+            type="link"
+            style={{ padding: 0, fontSize: 14, color: "#f5222d" }}
+            onClick={() => handleDelete(record)}
+          >
+            删除
+          </Button>
         </Space>
       ),
+      align: "center", 
     },
   ];
+
 
   const onClose = () => {
     setOpen(false);
@@ -178,8 +197,19 @@ const UserList = () => {
                 size="large"
                 icon={<PlusOutlined />}
                 onClick={() => setOpen(true)}
-                style={{ position: "absolute", right: 40, bottom: 40 }}
+                style={{ position: "absolute", right: 40, bottom: 30 }}
               />
+              <Typography.Text
+                style={{
+                  position: "absolute",
+                  right: 33,
+                  bottom: 0, // Adjust this value for spacing
+                  fontSize: "14px",
+                  color: "#333",
+                }}
+              >
+                添加信息
+              </Typography.Text>
             </Space>
 
             <Table
@@ -199,7 +229,7 @@ const UserList = () => {
 
       <Drawer
         title="添加人员信息"
-        placement="right"
+        placement="left"
         onClose={onClose}
         open={open}
         width="30%"
@@ -212,43 +242,36 @@ const UserList = () => {
         }
       >
         <Form layout="vertical" onFinish={onFinish} form={form}>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="username"
-                label="用户名"
-                rules={[{ required: true, message: "请输入用户名" }]}
-              >
-                <Input placeholder="请输入用户名" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="password"
-                label="密码"
-                rules={[{ required: true, message: "请输入密码" }]}
-              >
-                <Input placeholder="请输入密码" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="role"
-                label="角色"
-                rules={[{ required: true, message: "请选择角色" }]}
-              >
-                <Select placeholder="请选择角色">
-                  {role === "superAdmin" && (
-                    <Option value="admin">管理员</Option>
-                  )}
-                  <Option value="audit">审核人员</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
+          <Form.Item
+            name="username"
+            label="用户名"
+            rules={[{ required: true, message: "请输入用户名" }]}
+          >
+            <Input placeholder="请输入用户名" />
+          </Form.Item>
+
+          <Form.Item
+            name="password"
+            label="密码"
+            rules={[{ required: true, message: "请输入密码" }]}
+          >
+            <Input placeholder="请输入密码" />
+          </Form.Item>
+
+          <Form.Item
+            name="role"
+            label="角色"
+            rules={[{ required: true, message: "请选择角色" }]}
+          >
+            <Select placeholder="请选择角色">
+              {role === "superAdmin" && (
+                <Option value="admin">管理员</Option>
+              )}
+              <Option value="audit">审核人员</Option>
+            </Select>
+          </Form.Item>
         </Form>
+
       </Drawer>
     </div>
   );

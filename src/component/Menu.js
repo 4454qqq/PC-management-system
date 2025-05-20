@@ -63,7 +63,6 @@ const App = ({ isLoggedIn, setIsLoggedIn }) => {
     const auditItems = [
       {
         key: "travelLogList",
-        icon: <EditOutlined />,
         label: travelLogList,
       },
     ];

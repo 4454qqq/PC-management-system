@@ -12,8 +12,6 @@ import {
   Pagination,
   Input,
   Card,
-  Button,
-  Divider,
 } from "antd";
 import TravelLogCard from "../component/TravelLogCard";
 import { api } from "../util";
@@ -35,16 +33,16 @@ const RequestStatus = {
 };
 
 const TravelLogList = () => {
-  const [selectState, setSelectState] = useState(""); // 状态选择
-  const [searchText, setSearchText] = useState(""); // 搜索文本
-  const [travelLogs, setTravelLogs] = useState(null); // 存储旅行日志数据
+  const [selectState, setSelectState] = useState(""); // 状态选择，对应下拉选择
+  const [searchText, setSearchText] = useState(""); // 搜索文本，对应搜索框
+  const [travelLogs, setTravelLogs] = useState(null); // 存储旅行日志数据，travelLogs是已经从后端获取的数据
   const [currentPage, setCurrentPage] = useState(1); // 当前页
   const [pageSize] = useState(4); // 每页显示4条待审核的内容
-  const [requestStatus, setRequestStatus] = useState(RequestStatus.IDLE);
+  const [requestStatus, setRequestStatus] = useState(RequestStatus.IDLE);//requestStatus用来控制UI是否显示，初始化 requestStatus 的值为 "IDLE"，表示当前没有正在进行的请求，requestStatus：存储请求状态（空闲、加载中、成功、失败）
 
   const startIndex = (currentPage - 1) * pageSize; // 计算起始索引
   const endIndex = currentPage * pageSize; // 计算结束索引
-  const currentData = travelLogs?.slice(startIndex, endIndex); // 获取当前页的数据
+  const currentData = travelLogs?.slice(startIndex, endIndex); // 根据当前页码和每页显示数量，计算出当前页需要显示的日志数据
 
   // 状态改变函数
   const handleStateChange = (index, state, instruction) => {
@@ -71,6 +69,8 @@ const TravelLogList = () => {
         const response = await api.get("/auditManagement/travelLogs", {
           params,
         });
+        console.log(response.data);
+        
         setTravelLogs(response.data);
         setRequestStatus(RequestStatus.SUCCESS);
       } catch (error) {
@@ -79,11 +79,13 @@ const TravelLogList = () => {
       }
     };
     fetchData();
-  }, [searchText, selectState]); // 依赖于搜索文本和状态选择
+  }, [searchText, selectState]); // 依赖于1.搜索文本，2.选择的状态
 
   const onSearch = async (value) => {
+    console.log(value);
     setSearchText(value);
   };
+
 
   const handleSelectState = (item) => {
     const selectedItem = items.find((state) => state.key === item.key);

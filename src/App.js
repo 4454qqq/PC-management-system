@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-import { Layout, Button, theme, Typography } from "antd"; // Import Typography here
+
+import { Layout, Button, theme, Typography } from "antd"; 
 import {
   HashRouter as Router,
   Routes,
@@ -19,7 +15,7 @@ import TravelLogList from "./views/TravelLogList";
 import UserList from "./views/UserList";
 import { api } from "./util";
 import "./App.css";
-
+import LogDetail from './views/LogDetail';
 const { Header, Sider, Content } = Layout;
 
 const App = () => {
@@ -53,6 +49,7 @@ const App = () => {
     setIsLoggedIn(true);
   };
 
+  //ant desgin 钩子函数（设计令牌）
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -89,6 +86,7 @@ const App = () => {
                 boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
               }}
             >
+              {/* 用户登录且信息可用 */}
               {isLoggedIn && user && (
                 <div style={{ marginLeft: "10px", fontSize: "16px" }}>
                   <span style={{ fontWeight: 500, color: "#333" }}>
@@ -141,6 +139,10 @@ const App = () => {
                 <Route
                   path="/userList"
                   element={isLoggedIn ? <UserList /> : <Navigate to="/login" />}
+                />
+                <Route
+                  path="/logDetail/:logId"
+                  element={isLoggedIn ? <LogDetail /> : <Navigate to="/login" />}
                 />
               </Routes>
             </Content>
